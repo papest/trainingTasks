@@ -3,14 +3,9 @@ import java.io.*;
 public class SatelliteFastMapping1 {
 
 
-    static int[] x1;
-    static int[] x2;
-    static int[] y1;
-    static int[] y2;
-    static long[] sum1;
-    static long[] sum2;
-    static long[] sum3;
-    static long[] sum4;
+    static int[] coordinates;
+    static long[] sum;
+    static int size;
     static int n;
 
 
@@ -19,60 +14,53 @@ public class SatelliteFastMapping1 {
         ConsoleHelper consoleHelper = new ConsoleHelper();
 
 
-
         n = consoleHelper.readUnsignedInt();
 
 
-        StringBuilder result = new StringBuilder(65536);
-
-        x1 = new int[n];
-        x2 = new int[n];
-        y1 = new int[n];
-        y2 = new int[n];
-        sum1 = new long[n];
-        sum2 = new long[n];
-        sum3 = new long[n];
-        sum4 = new long[n];
+        StringBuilder result = new StringBuilder(262144);
+        size = n * 4;
 
 
-        for (int i = 0; i < n; i++) {
+        coordinates = new int[size];
+        sum = new long[size];
 
-            x1[i] = consoleHelper.readUnsignedInt();
-            y1[i] = consoleHelper.readUnsignedInt();
-            x2[i] = consoleHelper.readUnsignedInt();
-            y2[i] = consoleHelper.readUnsignedInt();
+        for (int i = 0; i < size; i++) {
+            coordinates[i] = consoleHelper.readUnsignedInt();
 
         }
 
 
         Thread[] threads = new Thread[3];
 
-
-        threads[0] = new SatelliteFastMapping1.Sum(x1, y2, sum2);
+// x1, y2, sum2
+        threads[0] = new SatelliteFastMapping1.Sum(0, 3, 1);
         threads[0].start();
-        threads[1] = new SatelliteFastMapping1.Sum(x2, y1, sum3);
+// x2, y1, sum3
+        threads[1] = new SatelliteFastMapping1.Sum(2, 1, 2);
         threads[1].start();
-        threads[2] = new SatelliteFastMapping1.Sum(x2, y2, sum4);
+// x2, y2, sum4
+        threads[2] = new SatelliteFastMapping1.Sum(2, 3, 3);
         threads[2].start();
-     
-        sum(x1, y1, sum1);
+// x1, y1, sum1
+        sum(0, 1, 0);
 
         for (int i = 0; i < 3; i++) {
             threads[i].join();
         }
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size; i += 4) {
 
-           result.append(sum1[i] + sum2[i] + sum3[i] + sum4[i]).append("\n");
+            result.append(sum[i] + sum[i + 1] + sum[i + 2] + sum[i + 3]).append("\n");
 
 
         }
+
         System.out.write(result.toString().getBytes());
 
 
     }
 
-    private static void sum(int[] x, int[] y, long[] sum) {
+    private static void sum(int xOffset, int yOffset, int sumOffset) {
 
         int[] previousX = {};
         int[] previousY = {};
@@ -81,13 +69,13 @@ public class SatelliteFastMapping1 {
         int[] previousXTemp;
         int[] previousYTemp;
 
-        for (int i = n - 1; i >= 0; i--) {
-            indX = binarySearchX(previousX, x[i]);
-            indY = binarySearchY(previousY, y[i]);
+        for (int i = size - 4; i >= 0; i -= 4) {
+            indX = binarySearchX(previousX, coordinates[i + xOffset]);
+            indY = binarySearchY(previousY, coordinates[i + yOffset]);
             int size = previousX.length;
 
             if (indX < size) {
-                if (previousY[indX] >= y[i]) {
+                if (previousY[indX] >= coordinates[i + yOffset]) {
                     continue;
                 }
             }
@@ -99,22 +87,22 @@ public class SatelliteFastMapping1 {
                 x0 = previousX[indY];
             }
 
-            sum[i] = (long) (x[i] - x0) * y[i];
-            if (sum[i] == 0) {
+            sum[i + sumOffset] = (long) (coordinates[i + xOffset] - x0) * coordinates[i + yOffset];
+            if (sum[i + sumOffset] == 0) {
                 continue;
             }
 
-            for (int j = Math.max(indY, 0); j < size - 1 && previousX[j] <= x[i]; j++) {
-                if (previousY[j] < y[i]) {
+            for (int j = Math.max(indY, 0); j < size - 1 && previousX[j] <= coordinates[i + xOffset]; j++) {
+                if (previousY[j] < coordinates[i + yOffset]) {
                     sum0 += (long) (previousX[j] - x0) * previousY[j];
                 }
                 x0 = previousX[j];
                 nextJ++;
             }
 
-            if (x0 < x[i] && size > 0) {
-                if (x[i] < previousX[nextJ]) {
-                    sum0 += (long) (x[i] - x0) * previousY[nextJ];
+            if (x0 < coordinates[i + xOffset] && size > 0) {
+                if (coordinates[i + xOffset] < previousX[nextJ]) {
+                    sum0 += (long) (coordinates[i + xOffset] - x0) * previousY[nextJ];
                 } else {
                     if (previousX[nextJ] > x0) {
                         sum0 += (long) (previousX[nextJ] - x0) * previousY[nextJ];
@@ -122,49 +110,49 @@ public class SatelliteFastMapping1 {
                 }
             }
 
-            sum[i] = sum[i] - sum0;
-            if (sum[i] == 0) {
+            sum[i + sumOffset] = sum[i + sumOffset] - sum0;
+            if (sum[i + sumOffset] == 0) {
                 continue;
             }
 
-           if (size == 0) {
-               previousX = new int[] {x[i]};
-               previousY = new int[] {y[i]};
+            if (size == 0) {
+                previousX = new int[]{coordinates[i + xOffset]};
+                previousY = new int[]{coordinates[i + yOffset]};
 
-           }  else {
+            } else {
 
-               int size1 = 0;
-               x0 = 0;
+                int size1 = 0;
+                x0 = 0;
 
-               if (!(indX == 0 && previousX[0] >= x[i] || y[i] >= previousY[0] )) {
-                   size1 += indY + 1;
-                   x0 = indY + 1;
-               }
-               if (x[i] < previousX[size - 1]) {
-                   size1 += size - indX;
-               }
-               size1++;
-               previousXTemp = new int[size1];
-               previousYTemp = new int[size1];
+                if (!(indX == 0 && previousX[0] >= coordinates[i + xOffset] || coordinates[i + yOffset] >= previousY[0])) {
+                    size1 += indY + 1;
+                    x0 = indY + 1;
+                }
+                if (coordinates[i + xOffset] < previousX[size - 1]) {
+                    size1 += size - indX;
+                }
+                size1++;
+                previousXTemp = new int[size1];
+                previousYTemp = new int[size1];
 
-               if ((indX != 0 || previousX[0] < x[i]) && y[i] < previousY[0]) {
-                   System.arraycopy(previousX, 0, previousXTemp, 0, indY + 1);
-                   System.arraycopy(previousY, 0, previousYTemp, 0, indY + 1);
+                if ((indX != 0 || previousX[0] < coordinates[i + xOffset]) && coordinates[i + yOffset] < previousY[0]) {
+                    System.arraycopy(previousX, 0, previousXTemp, 0, indY + 1);
+                    System.arraycopy(previousY, 0, previousYTemp, 0, indY + 1);
 
-               }
-               previousXTemp[x0] = x[i];
-               previousYTemp[x0] = y[i];
+                }
+                previousXTemp[x0] = coordinates[i + xOffset];
+                previousYTemp[x0] = coordinates[i + yOffset];
 
-               if ( x[i] < previousX[size - 1]) {
-                   System.arraycopy(previousX, indX, previousXTemp, x0 + 1, size - indX);
-                   System.arraycopy(previousY, indX, previousYTemp, x0 + 1, size - indX);
-               }
-               previousX = previousXTemp;
-               previousY = previousYTemp;
+                if (coordinates[i + xOffset] < previousX[size - 1]) {
+                    System.arraycopy(previousX, indX, previousXTemp, x0 + 1, size - indX);
+                    System.arraycopy(previousY, indX, previousYTemp, x0 + 1, size - indX);
+                }
+                previousX = previousXTemp;
+                previousY = previousYTemp;
 
-           }
+            }
 
-
+            Thread.yield();
         }
 
     }
@@ -234,7 +222,7 @@ public class SatelliteFastMapping1 {
 
 
             }
-            for (int i = 0; i < count1 ; i++) {
+            for (int i = 0; i < count1; i++) {
 
                 result = result * RADIX;
                 result += (digitArray[i] - '0');
@@ -248,7 +236,7 @@ public class SatelliteFastMapping1 {
 
         private boolean isDelimiter(char ch) {
 
-            return  '\n' == ch || '\r' == ch || ' ' == ch;
+            return '\n' == ch || '\r' == ch || ' ' == ch;
 
         }
 
@@ -257,18 +245,18 @@ public class SatelliteFastMapping1 {
 
     private static class Sum extends Thread {
 
-        int[] x;
-        int[] y;
-        long[] sum;
+        int xOffset;
+        int yOffset;
+        int sumOffset;
 
-        public Sum(int[] x, int[] y, long[] sum) {
-            this.x = x;
-            this.y = y;
-            this.sum = sum;
+        public Sum(int xOffset, int yOffset, int sumOffset) {
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+            this.sumOffset = sumOffset;
         }
 
         public void run() {
-            sum(x, y, sum);
+            sum(xOffset, yOffset, sumOffset);
         }
     }
 
