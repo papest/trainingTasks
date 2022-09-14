@@ -53,9 +53,13 @@ public class FTest {
         };
         StringBuilder stringBuilder = new StringBuilder(100000);
         while (stringBuilder.length() < 100000) {
-            for (int i = 'a'; i < 'z'; i++) {
-                stringBuilder.append((char) i).append(Character.toUpperCase((char) i));
+            for (int i = 'a'; i <= 'z'; i++) {
+                stringBuilder.append((char) i); //.append(Character.toUpperCase((char) i));
             }
+            for (int i = 'Z'; i >= 'A'; i--) {
+                stringBuilder.append((char) i);
+            }
+
         }
         stringBuilder.append("\n");
         data = new Object[][]{{stringBuilder.toString(), "\n"}};
