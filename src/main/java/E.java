@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 
 public class E {
+    // Римлянин
 
     static Pattern rome = Pattern.compile("M{0,3}((CM)|((C?D)?C{0,3}))?((XC)|((X?L)?X{0,3}))?((IX)|((I?V)?I{0,3}))");
     static Map<Character, Integer> map = Map.of('I', 1,

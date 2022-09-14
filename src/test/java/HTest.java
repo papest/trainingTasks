@@ -13,7 +13,7 @@ import org.testng.annotations.DataProvider;
 import java.io.*;
 
 
-public class FTest {
+public class HTest {
     static ByteArrayOutputStream output;
     static ByteArrayInputStream input;
     static PrintStream standardOut;
@@ -39,30 +39,15 @@ public class FTest {
 
     @DataProvider
     Object[][] data() {
-        Object[][] data = new Object[][] {
-                {"vxOoOoVvx\n", "vxx\n"},
-                {"abBa\n", "aa\n"},
-                {"AbBa\n", "\n"},
-                {"AaBB\n", "BB\n"},
-                {"AabBcc\n", "cc\n"},
-                {"AabB\n", "\n"},
-                {"CAaBbccCKnNk\n","\n"},
-                {"CaAFfKkcccNnAaaAc\n", "ccc\n"},
-                {"\n", "\n"}
+        Object[][] data = new Object[][]{
+                {"2\n" +
+                        "2 6\n", "8\n"},
+                {"3\n" +
+                        "6 2 4\n" , "18\n"},
+                {"5\n" +
+                        "2 3 4 5 6 7\n", "68\n"},
 
         };
-        StringBuilder stringBuilder = new StringBuilder(100000);
-        while (stringBuilder.length() < 100000) {
-            for (int i = 'a'; i <= 'z'; i++) {
-                stringBuilder.append((char) i); //.append(Character.toUpperCase((char) i));
-            }
-            for (int i = 'Z'; i >= 'A'; i--) {
-                stringBuilder.append((char) i);
-            }
-
-        }
-        stringBuilder.append("\n");
-        data = new Object[][]{{stringBuilder.toString(), "\n"}};
         return data;
     }
 
@@ -70,7 +55,7 @@ public class FTest {
     public void testMain(String in, String out) throws IOException {
         input = new ByteArrayInputStream(in.getBytes());
         System.setIn(input);
-        F.main(new String[]{});
+        H.main(new String[]{});
         Assert.assertEquals(output.toString(), out);
 
     }

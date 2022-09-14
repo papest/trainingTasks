@@ -4,30 +4,43 @@ import java.io.InputStreamReader;
 
 
 public class F {
+    // Хорошие строки
 
     private static String convertToGoodString(String probablyBadString) {
 
         char first;
         char second;
-        StringBuilder ourString = new StringBuilder(probablyBadString);
+        char[] ourString = probablyBadString.toCharArray();
+        int index1 = 0;
+        int index2;
+
 
         for (int i = 0, size = probablyBadString.length(); i < size - 1; i++) {
-
-            first = ourString.charAt(i);
-            second = ourString.charAt(i + 1);
+            index2 = i + 1;
+            first = ourString[index1];
+            second = ourString[index2];
             if ((Character.toUpperCase(first) == Character.toUpperCase(second)) && (first != second)) {
-                size -= 2;
-                ourString.deleteCharAt(i);
-                ourString.deleteCharAt(i);
-                i -= 2;
-                if (i == -2) {
-                    i = -1;
+
+                ourString[index1] = ' ';
+                ourString[index2] = ' ';
+
+
+                while (ourString[index1] == ' ') {
+                    index1--;
+                    if (index1 == -1) {
+                        index1 = index2 + 1;
+                        break;
+                    }
+
                 }
 
+            } else {
+                index1 = index2;
             }
+
         }
 
-        return ourString.toString();
+        return new String(ourString).replaceAll(" ", "");
     }
 
     public static void main(String[] args) throws IOException {

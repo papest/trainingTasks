@@ -3,36 +3,39 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 
-public class C {
-    // Статус 200
+public class H {
+    // Сизиф
 
-    private static long getNumberOfGoodPairs(int n, List<Integer> numbers) {
+    private static long getEnergyForUnion(List<Long> stones) {
+        PriorityQueue<Long> queue = new PriorityQueue<Long>(stones);
+        long sum = 0;
+        long current;
+        while (queue.size() > 1) {
+            current = queue.poll() + queue.poll();
+            sum += current;
+            queue.add(current);
+        }
 
-        return
-                numbers.stream().map(i -> i % 200)
-                        .collect(Collectors.toMap(a -> a, val -> 1, (v1, v2) -> v1 + v2))
-                        .values().stream().filter(v -> v != 1)
-                        .mapToLong(v -> (long) v * (v - 1) / 2)
-                        .sum();
-
-
+        return sum;
     }
 
     public static void main(String[] args) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             int n = readInt(reader);
-            List<Integer> numbers = readList(reader);
-            System.out.println(getNumberOfGoodPairs(n, numbers));
+            List<Long> stones = readList(reader);
+
+            System.out.println(getEnergyForUnion(stones));
         }
     }
 
-    private static List<Integer> readList(BufferedReader reader) throws IOException {
+    private static List<Long> readList(BufferedReader reader) throws IOException {
         return Arrays.asList(reader.readLine().strip().split(" "))
                 .stream()
-                .map(token -> Integer.parseInt(token))
+                .map(token -> Long.parseLong(token))
                 .collect(Collectors.toList());
     }
 
