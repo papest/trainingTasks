@@ -51,21 +51,21 @@ public class KTest {
                         "k\n", "YES\n"}
 
         };
-        final int x = 2000;
-        char[] arrayTemplate = new char[x];
-        for (int i = 0; i < x; i++) {
-            arrayTemplate[i] = '*';
-        }
-        char[] arrayString = new char[x];
-        for (int i = 0; i < x; i++) {
-            arrayString[i] = (char)('a' + i%20);
-        }
-        data = new Object[][] {
-                {
-                    new String(arrayTemplate) + "\n" +
-                            new String(arrayString) + "\n",
-                        "YES\n"
-                }};
+//        final int x = 2000;
+//        char[] arrayTemplate = new char[x];
+//        for (int i = 0; i < x; i++) {
+//            arrayTemplate[i] = '*';
+//        }
+//        char[] arrayString = new char[x];
+//        for (int i = 0; i < x; i++) {
+//            arrayString[i] = (char)('a' + i%20);
+//        }
+//        data = new Object[][] {
+//                {
+//                    new String(arrayTemplate) + "\n" +
+//                            new String(arrayString) + "\n",
+//                        "YES\n"
+//                }};
 
         return data;
     }

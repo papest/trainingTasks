@@ -7,8 +7,27 @@ public class K {
     //Разрыв шаблона
 
     private static boolean stringMatchesTemplate(String stringToCheck, String template) {
-        String ourTemplate = template.replaceAll("\\?", ".").replaceAll("\\*", ".*");
-        return stringToCheck.matches(ourTemplate);
+        int size = template.length() << 1;
+        char[] array = new char[size];
+        char[] templateArray = template.toCharArray();
+        int j = 0;
+        for (char t : templateArray) {
+            switch (t) {
+                case '*':
+                    array[j++] = '.';
+                    array[j++] = '*';
+                    break;
+                case '?':
+                    array[j++] = '.';
+                    break;
+                default:
+                    array[j++] = t;
+            }
+        }
+
+        String actualTemplate = new String(array, 0, j);
+
+        return stringToCheck.matches(actualTemplate);
     }
 
     public static void main(String[] args) throws IOException {
