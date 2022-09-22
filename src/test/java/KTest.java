@@ -39,16 +39,41 @@ public class KTest {
         Object[][] data = new Object[][]{
                 {"*a*\n" +
                         "adce\n", "YES\n"},
+                {"*a**\n" +
+                        "adce\n", "YES\n"},
                 {"*\n" +
                         "xyz\n", "YES\n"},
                 {"algorithms\n" +
                         "algorithmus\n", "NO\n"},
+                {"*o****rit**h*m***\n" +
+                        "algorithm\n", "YES\n"},
                 {"?\n" +
                         "k\n", "YES\n"},
                 {"?\n" +
                         "KK\n", "NO\n"},
+                {"?*\n" +
+                        "KK\n", "YES\n"},
+                {"a*b*c\n"+ "abc\n", "YES\n"},
+                {"*a*b*c*\n"+ "abc\n", "YES\n"},
+                {"*a*b*ck*\n"+ "abc\n", "NO\n"},
+                {"*a*b*ck\n"+ "abc\n", "NO\n"},
                 {"*****\n" +
-                        "k\n", "YES\n"}
+                        "k\n", "YES\n"},
+                {"*\n" +
+                        "kjjjjioppl\n", "YES\n"},
+                {"*abcdef\n" +"cdef\n", "NO\n"},
+                {"*abcdef\n" +"abcdef\n", "YES\n"},
+                {"ab?\n" + "ab\n", "NO\n"},
+                {"a??k\n" + "abk\n", "NO\n"},
+                {"?***?*?\n" + "abkc\n", "YES\n"},
+                {"ab*???\n" + "abdd\n", "NO\n"},
+                {"ab*????\n" + "abdd\n", "NO\n"},
+                {"ab*??\n" + "abdd\n", "YES\n"},
+                {"*abc**ab***hk\n" +"abkabchakbjabjhk\n", "YES\n"},
+                {"algorithms*k\n" +
+                        "algorithms\n", "NO\n"},
+                {"**algorithms\n" +
+                        "algorithms\n", "YES\n"}
 
         };
 //        final int x = 2000;
