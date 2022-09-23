@@ -4,39 +4,44 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class L {
-    // Пересечение отрезков
+    //Пересечение отрезков
 
-    private static ArrayList<Integer> getIntersection(int[] firstSequence, int[] secondSequence) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        int left = 0;
-        int right = firstSequence.length;
-        int mid;
-        for (int i = 0, sizeSecond = secondSequence.length; i < sizeSecond ; i += 2) {
-
-
-            while (left < right) {
-                mid = (left + right) / 2;
-                if (secondSequence[i] > firstSequence[mid]) {
-                    left = mid + 1;
-                } else {
-                    right = mid;
+    private static List<Segment> getIntersection(List<Segment> firstSequence, List<Segment> secondSequence) {
+        List<Segment> result = new ArrayList<Segment>();
+        Segment segment2;
+        Segment segment1;
+        int start;
+        int end;
+        for (int i = 0, j = 0, size2 = secondSequence.size(), size1 = firstSequence.size(); i < size2; i++) {
+            segment2 = secondSequence.get(i);
+            for (; j < size1; j++) {
+                segment1 = firstSequence.get(j);
+                if (segment1.right < segment2.left) {
+                    continue;
                 }
-            }
-            if (secondSequence[i] == firstSequence[left]) {
-                if (left%2 == 1) {
-                    result.add(firstSequence[left]);
-                    result.add(firstSequence[left]);
+                if (segment1.left > segment2.right) {
+                    break;
                 }
+
+                start = Math.max(segment1.left, segment2.left);
+                end = Math.min(segment1.right, segment2.right);
+                result.add(new Segment(start, end));
+
+
             }
 
+            if (j > 0) {
+                j--;
+            }
 
 
         }
-
 
         return result;
     }
@@ -44,48 +49,48 @@ public class L {
     public static void main(String[] args) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out))) {
-           outputAnswer(getIntersection(readSegments(reader), readSegments(reader)), writer);
+            List<Segment> firstSequence = readSegments(reader);
+            List<Segment> secondSequence = readSegments(reader);
 
-
+            List<Segment> intersection = getIntersection(firstSequence, secondSequence);
+            outputAnswer(intersection, writer);
         }
     }
 
-    private static void outputAnswer(ArrayList<Integer> answerSequence, BufferedWriter writer) throws IOException {
-        for (int i = 0, size = answerSequence.size(); i < size; i += 2) {
-            writer.write(answerSequence.get(i) + " " + answerSequence.get(i + 1) + "\n");
+    private static void outputAnswer(List<Segment> intersection, BufferedWriter writer) throws IOException {
+        for (Segment segment : intersection) {
+            writer.write(segment.left + " " + segment.right + "\n");
         }
     }
 
-    private static int[] readSegments(BufferedReader reader) throws IOException {
+    private static List<Segment> readSegments(BufferedReader reader) throws IOException {
         int n = readInt(reader);
-        int size = n * 2;
-        int[] segments = new int[n * 2];
-        char current;
-        char[] chars;
-
-        for (int i = 0; i < size - 1; i += 2) {
-            chars = reader.readLine().toCharArray();
-            int j = 0;
-            current = chars[j++];
-            while (current != ' ') {
-                segments[i] = segments[i] * 10 + (current - '0');
-                current = chars[j++];
-
-            }
-
-            for (int sizeChars = chars.length; j < sizeChars; ) {
-                current = chars[j++];
-                segments[i + 1] = segments[i + 1] * 10 + (current - '0');
-            }
-
+        List<Segment> segments = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            List<Integer> borders = readTwoNumbers(reader);
+            segments.add(new Segment(borders.get(0), borders.get(1)));
         }
-
         return segments;
+    }
+
+    private static class Segment {
+        public final int left;
+        public final int right;
+
+        public Segment(int left, int right) {
+            this.left = left;
+            this.right = right;
+        }
     }
 
     private static int readInt(BufferedReader reader) throws IOException {
         return Integer.parseInt(reader.readLine());
     }
 
-
+    private static List<Integer> readTwoNumbers(BufferedReader reader) throws IOException {
+        return Arrays.asList(reader.readLine().strip().split(" "))
+                .stream()
+                .map(elem -> Integer.parseInt(elem))
+                .collect(Collectors.toList());
+    }
 }
