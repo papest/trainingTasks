@@ -10,36 +10,47 @@ public class M {
     // Массив юрского периода
     private static class HistoricalArray {
         int n;
+        ArrayList<Integer> eras;
+        TreeSet<Integer>[] changes;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
         int currentEra;
-        TreeMap<Integer, Integer> previousEra = new TreeMap<>();
+        int currentEraIndex;
+
 
         public HistoricalArray(int n) {
-            // your code goes here
+
             this.n = n;
+            eras = new ArrayList<>();
+            eras.add(0);
+            currentEraIndex = 0;
+            changes = new TreeSet[n];
+            for (int i = 0; i < n; i++) {
+                changes[i] = new TreeSet<Integer>();
+
+            }
             currentEra = 0;
-            previousEra.put(0, 0);
             map.put(0, new TreeMap<>());
         }
 
         public void set(int index, int value) {
 
             map.get(currentEra).put(index, value);
+            changes[index].add(currentEraIndex);
         }
 
         public void beginNewEra(int eraId) {
 
             map.put(eraId, new TreeMap<>());
-            previousEra.put(eraId, currentEra);
+            eras.add(eraId);
             currentEra = eraId;
+            currentEraIndex++;
 
         }
 
         public int get(int index, int eraId) {
-            TreeMap<Integer, Integer> treeMap = map.get(eraId);
-            int previous = previousEra.get(eraId);
-            return treeMap.getOrDefault(index, eraId == 0 ? treeMap.getOrDefault(index, 0)
-                    : this.get(index, previous));
+            Integer eraIndex = changes[index].floor(eras.indexOf(eraId));
+            return eraIndex == null ? 0 : map.get(eras.get(eraIndex)).get(index);
+
         }
     }
 
@@ -53,15 +64,15 @@ public class M {
                 List<String> queryParts = Arrays.asList(reader.readLine().strip().split(" "));
                 String queryType = queryParts.get(0);
                 if (queryType.equals("set")) {
-                    int index = Integer.parseInt(queryParts.get(1));
-                    int value = Integer.parseInt(queryParts.get(2));
+                    int index = parseInteger(queryParts.get(1));
+                    int value = parseInteger(queryParts.get(2));
                     array.set(index, value);
                 } else if (queryType.equals("begin_new_era")) {
-                    int eraId = Integer.parseInt(queryParts.get(1));
+                    int eraId = parseInteger(queryParts.get(1));
                     array.beginNewEra(eraId);
                 } else if (queryType.equals("get")) {
-                    int index = Integer.parseInt(queryParts.get(1));
-                    int eraId = Integer.parseInt(queryParts.get(2));
+                    int index = parseInteger(queryParts.get(1));
+                    int eraId = parseInteger(queryParts.get(2));
                     writer.write(array.get(index, eraId) + "\n");
                 }
             }
@@ -69,6 +80,15 @@ public class M {
     }
 
     private static int readInt(BufferedReader reader) throws IOException {
-        return Integer.parseInt(reader.readLine());
+        return parseInteger(reader.readLine());
+    }
+
+    private static int parseInteger(String s) {
+        int result = 0;
+        char[] chars = s.toCharArray();
+        for (char ch : chars) {
+            result = result * 10 + ch - '0';
+        }
+        return result;
     }
 }
