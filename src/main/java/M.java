@@ -12,28 +12,34 @@ public class M {
         int n;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
         int currentEra;
+        TreeMap<Integer, Integer> previousEra = new TreeMap<>();
 
         public HistoricalArray(int n) {
             // your code goes here
             this.n = n;
             currentEra = 0;
+            previousEra.put(0, 0);
             map.put(0, new TreeMap<>());
         }
 
         public void set(int index, int value) {
+
             map.get(currentEra).put(index, value);
         }
 
         public void beginNewEra(int eraId) {
 
-            map.put(eraId, (TreeMap<Integer, Integer>) map.get(currentEra).clone());
+            map.put(eraId, new TreeMap<>());
+            previousEra.put(eraId, currentEra);
             currentEra = eraId;
+
         }
 
         public int get(int index, int eraId) {
             TreeMap<Integer, Integer> treeMap = map.get(eraId);
-            Integer res = treeMap.get(index);
-            return res == null ? 0 : res;
+            int previous = previousEra.get(eraId);
+            return treeMap.getOrDefault(index, eraId == 0 ? treeMap.getOrDefault(index, 0)
+                    : this.get(index, previous));
         }
     }
 
