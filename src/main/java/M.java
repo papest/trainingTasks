@@ -10,7 +10,7 @@ public class M {
     // Массив юрского периода
     private static class HistoricalArray {
         int n;
-        ArrayList<Integer> eras;
+        TreeMap<Integer, Integer> eras;
         TreeSet<Integer>[] changes;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
         int currentEra;
@@ -20,8 +20,8 @@ public class M {
         public HistoricalArray(int n) {
 
             this.n = n;
-            eras = new ArrayList<>();
-            eras.add(0);
+            eras = new TreeMap<>();
+            eras.put(0, 0);
             currentEraIndex = 0;
             changes = new TreeSet[n];
             for (int i = 0; i < n; i++) {
@@ -34,22 +34,21 @@ public class M {
 
         public void set(int index, int value) {
 
-            map.get(currentEra).put(index, value);
+            map.get(currentEraIndex).put(index, value);
             changes[index].add(currentEraIndex);
         }
 
         public void beginNewEra(int eraId) {
-
-            map.put(eraId, new TreeMap<>());
-            eras.add(eraId);
-            currentEra = eraId;
             currentEraIndex++;
+            map.put(currentEraIndex, new TreeMap<>());
+            currentEra = eraId;
+            eras.put(eraId, currentEraIndex);
 
         }
 
         public int get(int index, int eraId) {
-            Integer eraIndex = changes[index].floor(eras.indexOf(eraId));
-            return eraIndex == null ? 0 : map.get(eras.get(eraIndex)).get(index);
+            Integer eraIndex = changes[index].floor(eras.get(eraId));
+            return eraIndex == null ? 0 : map.get(eraIndex).get(index);
 
         }
     }
