@@ -3,37 +3,37 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class M {
-// Массив юрского периода
+    // Массив юрского периода
     private static class HistoricalArray {
         int n;
-        TreeMap<Integer, int[]> map = new TreeMap<>();
+        TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
         int currentEra;
 
         public HistoricalArray(int n) {
             // your code goes here
             this.n = n;
             currentEra = 0;
-            map.put(0, new int[n]);
+            map.put(0, new TreeMap<>());
         }
 
         public void set(int index, int value) {
-            map.get(currentEra)[index] = value;
+            map.get(currentEra).put(index, value);
         }
 
         public void beginNewEra(int eraId) {
-            map.put(eraId, Arrays.copyOf(map.get(currentEra), n));
+
+            map.put(eraId, (TreeMap<Integer, Integer>) map.get(currentEra).clone());
             currentEra = eraId;
         }
 
         public int get(int index, int eraId) {
-
-            return map.get(eraId)[index];
+            TreeMap<Integer, Integer> treeMap = map.get(eraId);
+            Integer res = treeMap.get(index);
+            return res == null ? 0 : res;
         }
     }
 
