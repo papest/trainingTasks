@@ -16,17 +16,21 @@ import java.util.*;
  //*/
 
 public class N {
-    static TreeMap <Integer, Node> map = new TreeMap<>();
+    static ArrayList <Integer> valueList = new ArrayList<>();
+    static ArrayList<Node> nodeList = new ArrayList<>();
+
 
     public static Node cloneGraph(Node node) {
-        Node clone = map.get(node.val);
-        if (clone != null) {
-            return clone;
+
+        int nodeIndex = valueList.indexOf(node.val);
+        if (nodeIndex != -1) {
+            return nodeList.get(nodeIndex);
         }
 
         Node finalClone = new Node(node.val);
         node.neighbours.forEach(node1 -> finalClone.neighbours.add(N.cloneGraph(node1)));
-        map.put(node.val, finalClone);
+        valueList.add(node.val);
+        nodeList.add(finalClone);
         return finalClone;
     }
 }
