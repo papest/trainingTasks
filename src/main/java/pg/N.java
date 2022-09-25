@@ -16,21 +16,28 @@ import java.util.*;
  //*/
 
 public class N {
-    static ArrayList <Integer> valueList = new ArrayList<>();
-    static ArrayList<Node> nodeList = new ArrayList<>();
+     //Атака клонов
+    static Node[] nodes = new Node[10000];
+    static int pos = 0;
 
 
     public static Node cloneGraph(Node node) {
 
-        int nodeIndex = valueList.indexOf(node.val);
+        int nodeIndex = -1;
+
+        for (int i = 0; i < pos; i++) {
+            if (nodes[i].val == node.val) {
+                nodeIndex = i;
+                break;
+            }
+        }
         if (nodeIndex != -1) {
-            return nodeList.get(nodeIndex);
+            return nodes[nodeIndex];
         }
 
         Node finalClone = new Node(node.val);
         node.neighbours.forEach(node1 -> finalClone.neighbours.add(N.cloneGraph(node1)));
-        valueList.add(node.val);
-        nodeList.add(finalClone);
+        nodes[pos++] = finalClone;
         return finalClone;
     }
 }
