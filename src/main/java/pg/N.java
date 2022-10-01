@@ -68,16 +68,19 @@ public class N {
     }
 
     public static Node cloneGraph(Node node) {
+        HashMap<Integer, Integer> nodeIndex = new HashMap<>();
         nodes[pos++] = node;
         node.neighbours.forEach(node1 -> addNode(node1));
         int startNodeIndex = binarySearch(node);
         for (int i = 0; i < pos; i++) {
             nodes1[i] = new Node(nodes[i].val);
+            nodeIndex.put(nodes[i].val, i);
         }
+
         for (int i = 0; i < pos; i++) {
 
             for (Node node1 : nodes[i].neighbours) {
-                int ind = binarySearch(node1);
+                int ind = nodeIndex.get(node1.val);
                 nodes1[i].neighbours.add(nodes1[ind]);
             }
         }
