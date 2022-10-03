@@ -17,9 +17,11 @@ class Node {
 
 public class N {
     //Атака клонов
-    static Node[] nodes = new Node[10000];
-    static Node[] nodes1 = new Node[10000];
-    static int pos = 0;
+    static int MAX_NODES = 100000;
+    static Node[] nodes1;
+    static HashMap<Integer, Integer> nodeIndex;
+    static int pos;
+
 
     public static void main(String[] args) {
         Node node1 = new Node(3);
@@ -36,56 +38,37 @@ public class N {
 
     }
 
-    private static int binarySearch(Node node) {
-        int left = 0;
-        int right = pos;
-        int mid;
-        while (left < right) {
-            mid = (left + right) >> 1;
-            if (node.val > nodes[mid].val) {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
-        }
-        return left;
-    }
-
-    private static void addNode(Node node) {
-        int index = binarySearch(node);
-        if (index < pos && nodes[index].val == node.val) {
-            return;
-        }
-        if (index < pos) {
-            System.arraycopy(nodes, index, nodes, index + 1, pos - index);
-        }
-        nodes[index] = node;
-        pos++;
-        for (int i = 0, size = pos; i < size; i++) {
-            nodes[i].neighbours.forEach(node1 -> addNode(node1));
-        }
-
-    }
 
     public static Node cloneGraph(Node node) {
-        HashMap<Integer, Integer> nodeIndex = new HashMap<>();
-        nodes[pos++] = node;
-        node.neighbours.forEach(node1 -> addNode(node1));
-        int startNodeIndex = binarySearch(node);
-        for (int i = 0; i < pos; i++) {
-            nodes1[i] = new Node(nodes[i].val);
-            nodeIndex.put(nodes[i].val, i);
-        }
 
-        for (int i = 0; i < pos; i++) {
+        nodes1 = new Node[MAX_NODES];
+        nodeIndex = new HashMap<>();
+        pos = 0;
+        LinkedList<Integer> stack = new LinkedList<>();
+        nodes1[pos] = new Node(node.val);
+        nodeIndex.put(node.val, pos++);
+        for (Node node1 : node.neighbours) {
+            if (nodeIndex.get(node1.val) == null) {
+                nodes1[pos] = new Node(node1.val);
+                stack.push(pos);
+                nodeIndex.put(node1.val, pos++);
 
-            for (Node node1 : nodes[i].neighbours) {
-                int ind = nodeIndex.get(node1.val);
-                nodes1[i].neighbours.add(nodes1[ind]);
             }
+            nodes1[nodeIndex.get(node.val)].neighbours.add(node1);
+        }
+        while (!stack.isEmpty()) {
+            int index = stack.pop();
+            Node node1 = nodes1[index];
+            if (nodeIndex.get(node1.val) == null) {
+                nodes1[node1.val] = new Node(node1.val);
+                stack.push(pos);
+                nodeIndex.put(node1.val, pos++);
+
+            }
+            nodes1[nodeIndex.get(node1.val)].neighbours.add(node1);
         }
 
 
-        return nodes1[startNodeIndex];
+        return nodes1[0];
     }
 }
