@@ -1,5 +1,6 @@
 package pg;
 
+import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -44,6 +45,9 @@ public class NTest {
 
     @Test(dataProvider = "data")
     public void testCloneGraph(Node node) {
-        N.cloneGraph(node);
+        Node node1 = N.cloneGraph(node);
+        Assert.assertEquals(node.val, node1.val);
+        Assert.assertEquals(node.neighbours.size(), node1.neighbours.size());
+        Assert.assertNotEquals(node, node1);
     }
 }

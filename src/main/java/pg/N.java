@@ -18,7 +18,7 @@ class Node {
 public class N {
     //Атака клонов
     static int MAX_NODES = 100000;
-    static Node[] nodes1;
+    static Node[] nodes;
     static HashMap<Integer, Integer> nodeIndex;
     static int pos;
 
@@ -41,34 +41,30 @@ public class N {
 
     public static Node cloneGraph(Node node) {
 
-        nodes1 = new Node[MAX_NODES];
+        nodes = new Node[MAX_NODES];
         nodeIndex = new HashMap<>();
         pos = 0;
-        LinkedList<Integer> stack = new LinkedList<>();
-        nodes1[pos] = new Node(node.val);
+        LinkedList<Node> stack = new LinkedList<>();
+        nodes[pos] = new Node(node.val);
+        stack.push(node);
         nodeIndex.put(node.val, pos++);
-        for (Node node1 : node.neighbours) {
-            if (nodeIndex.get(node1.val) == null) {
-                nodes1[pos] = new Node(node1.val);
-                stack.push(pos);
-                nodeIndex.put(node1.val, pos++);
 
-            }
-            nodes1[nodeIndex.get(node.val)].neighbours.add(node1);
-        }
         while (!stack.isEmpty()) {
-            int index = stack.pop();
-            Node node1 = nodes1[index];
-            if (nodeIndex.get(node1.val) == null) {
-                nodes1[node1.val] = new Node(node1.val);
-                stack.push(pos);
-                nodeIndex.put(node1.val, pos++);
 
+            Node node1 = stack.pop();
+            int index = nodeIndex.get(node1.val);
+            for (Node node2 : node1.neighbours) {
+                if (nodeIndex.get(node2.val) == null) {
+                    nodes[pos] = new Node(node2.val);
+                    stack.push(node2);
+                    nodeIndex.put(node2.val, pos++);
+
+                }
+                nodes[index].neighbours.add(nodes[nodeIndex.get(node2.val)]);
             }
-            nodes1[nodeIndex.get(node1.val)].neighbours.add(node1);
         }
 
 
-        return nodes1[0];
+        return nodes[0];
     }
 }
