@@ -34,7 +34,7 @@ public class OTest {
 
     @DataProvider
     Object[][] data() {
-        Object[][] data = new Object[][]{
+        Object[][] result = new Object[][]{
                 {"5 3\n" +
                         "1 1\n" +
                         "3 3\n" +
@@ -50,7 +50,7 @@ public class OTest {
                         "2 2\n" +
                         "3 3\n" +
                         "1\n", "1\n"},
-                {"0 0\n" + "2\n", "2\n"},
+
                 {"1 1\n" + "2 3\n" + "5\n", "8\n"},
                 {"3 3\n" +
                         "0 3\n" +
@@ -59,7 +59,7 @@ public class OTest {
                         "0\n","6\n"}
 
         };
-        return data;
+        return result;
     }
 
     @Test(dataProvider = "data")
