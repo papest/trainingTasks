@@ -5,6 +5,7 @@ import java.util.*;
 
 
 public class O {
+    // Монополия++
 
     private static long getMaxFinalCapital(List<Building> buildings, int startCapital, int maxNumberOfBuildings) {
         long currentCapital = startCapital;
