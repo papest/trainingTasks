@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class O {
@@ -34,9 +33,9 @@ public class O {
 
     public static void main(String[] args) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            List<Integer> nAndK = readTwoNumbers(reader);
-            int n = nAndK.get(0);
-            int k = nAndK.get(1);
+            int[] nAndK = readTwoNumbers(reader);
+            int n = nAndK[0];
+            int k = nAndK[1];
             List<Building> buildings = readBuildings(reader, n);
             int M = readInt(reader);
             System.out.println(getMaxFinalCapital(buildings, M, k));
@@ -46,8 +45,8 @@ public class O {
     private static List<Building> readBuildings(BufferedReader reader, int n) throws IOException {
         List<Building> buildings = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            List<Integer> parameters = readTwoNumbers(reader);
-            buildings.add(new Building(parameters.get(0), parameters.get(1)));
+            int[] parameters = readTwoNumbers(reader);
+            buildings.add(new Building(parameters[0], parameters[1]));
         }
         return buildings;
     }
@@ -56,11 +55,22 @@ public class O {
         return Integer.parseInt(reader.readLine());
     }
 
-    private static List<Integer> readTwoNumbers(BufferedReader reader) throws IOException {
-        return Arrays.asList(reader.readLine().strip().split("\\s+"))
-                .stream()
-                .map(elem -> Integer.parseInt(elem))
-                .collect(Collectors.toList());
+    private static int[] readTwoNumbers(BufferedReader reader) throws IOException {
+        char[] readString = reader.readLine().toCharArray();
+        int[] result = new int[2];
+        int pos = 0;
+        char ch = readString[pos++];
+
+        while (ch != ' ') {
+            result[0] = result[0] * 10 + (ch - '0');
+            ch = readString[pos++];
+        }
+
+        while (pos < readString.length) {
+            result[1] = result[1] * 10 + (readString[pos++] - '0');
+
+        }
+        return result;
     }
 
     private static class Building {
