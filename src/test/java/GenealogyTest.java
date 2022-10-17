@@ -10,7 +10,7 @@ import org.testng.annotations.DataProvider;
 import java.io.*;
 
 
-public class BeadsTest {
+public class GenealogyTest {
     static ByteArrayOutputStream output;
     static ByteArrayInputStream input;
     static PrintStream standardOut;
@@ -37,23 +37,18 @@ public class BeadsTest {
     @DataProvider
     Object[][] data() {
         Object[][] data = new Object[][]{
-                {"2\n" +
-                        "1 2\n", "2\n"},
-                {"5\n" +
-                        "2 1\n" +
-                        "2 3\n" +
-                        "2 4\n" +
-                        "2 5\n", "3\n"},
-                {"10\n" +
-                        "1 2\n" +
-                        "2 3\n" +
-                        "3 4 \n" +
-                        "4 5\n" +
-                        "1 6\n" +
-                        "6 10\n" +
-                        "10 9\n" +
-                        "9 8\n" +
-                        "8 7\n", "10\n"}
+                {"9\n" +
+                        "Alexei Peter_I\n" +
+                        "Anna Peter_I\n" +
+                        "Elizabeth Peter_I\n" +
+                        "Peter_II Alexei\n" +
+                        "Peter_III Anna\n" +
+                        "Paul_I Peter_III\n" +
+                        "Alexander_I Paul_I\n" +
+                        "Nicholaus_I Paul_I\n" +
+                        "Anna Nicholaus_I\n" +
+                        "Peter_II Peter_I\n" +
+                        "Alexei Paul_I\n", "1 2 0\n"},
 
 
         };
@@ -64,7 +59,7 @@ public class BeadsTest {
     public void testMain(String in, String out) throws IOException {
         input = new ByteArrayInputStream(in.getBytes());
         System.setIn(input);
-        Beads.main(new String[]{});
+        Genealogy.main(new String[]{});
         Assert.assertEquals(output.toString(), out);
 
     }
