@@ -55,7 +55,8 @@ public class DeserializationTest {
                         "1000\n" +
                         "1001\n" +
                         "101\n" +
-                        "11\n"}
+                        "11\n"},
+                {"1\n" + "\n", "0\n"}
 
         };
         return data;

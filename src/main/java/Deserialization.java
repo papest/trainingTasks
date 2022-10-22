@@ -12,15 +12,17 @@ public class Deserialization {
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(bufferedReader.readLine());
         String treeString;
-        ArrayList<String> result = new ArrayList<>(8192);
+        ArrayList<Result> result = new ArrayList<>(8192);
         for (int i = 0; i < n; i++) {
             treeString = bufferedReader.readLine();
-            deserializeTree(treeString, bufferedWriter, result);
+            deserializeTree(treeString, result);
             bufferedWriter.write('0' + result.size());
 
-            for (String a : result) {
+            for (Result a : result) {
                 bufferedWriter.newLine();
-                bufferedWriter.write(a.toCharArray());
+                char[] bitString = resultToString(a);
+
+                bufferedWriter.write(bitString);
             }
             bufferedWriter.newLine();
             bufferedWriter.flush();
@@ -28,10 +30,26 @@ public class Deserialization {
 
 
         }
+
+
         bufferedWriter.close();
     }
 
-    private static void deserializeTree(String treeString, BufferedWriter bufferedWriter, ArrayList<String> result) {
+    private static char[] resultToString(Result result) {
+        char[] bitString = new char[result.length];
+
+
+        long value = result.value;
+        for (int i = 0; i < result.length; i++) {
+
+            bitString[result.length - 1 - i] = (value & 1L) == 0 ? '0' : '1';
+            value = value >>> 1;
+
+        }
+        return bitString;
+    }
+
+    private static void deserializeTree(String treeString, ArrayList<Result> result) {
         char[] array = treeString.toCharArray();
         Node tree = new Node("root");
         Node node = tree;
@@ -63,29 +81,27 @@ public class Deserialization {
 
     }
 
-    private static void answer(ArrayList<String> result, Node tree) {
+    private static void answer(ArrayList<Result> result, Node tree) {
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Long> prefixes = new LinkedList<>();
-        LinkedList<Long> lengths = new LinkedList<>();
+        LinkedList<Integer> lengths = new LinkedList<>();
         Node node;
         long pref;
-        long l;
+        int l;
         nodes.push(tree);
         prefixes.push(0L);
-        lengths.push(0L);
+        lengths.push(0);
         while (!nodes.isEmpty()) {
             node = nodes.poll();
             pref = prefixes.poll();
             l = lengths.poll();
             if (node.left == null) {
-                String bitString = BigInteger.valueOf(pref).toString(2);
-
-                if (bitString.length() < l) {
-                    result.add(String.format("%0" + (l - bitString.length()) + "d%s", 0, bitString));
+                if (node.type.equals("root")) {
                     continue;
                 }
-                result.add(bitString);
+                result.add(new Result(pref, l));
                 continue;
+
             }
 
             nodes.push(node.right);
@@ -97,6 +113,17 @@ public class Deserialization {
 
         }
     }
+
+    private static class Result {
+        final long value;
+        final int length;
+
+        public Result(long value, int length) {
+            this.value = value;
+            this.length = length;
+        }
+    }
+
 
     private static class Node {
         Node left;
