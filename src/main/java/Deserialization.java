@@ -1,8 +1,7 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class Deserialization {
@@ -10,16 +9,29 @@ public class Deserialization {
     public static void main(String[] args) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(bufferedReader.readLine());
         String treeString;
+        ArrayList<String> result = new ArrayList<>(8192);
         for (int i = 0; i < n; i++) {
             treeString = bufferedReader.readLine();
-            deserializeTree(treeString);
+            deserializeTree(treeString, bufferedWriter, result);
+            bufferedWriter.write('0' + result.size());
+
+            for (String a : result) {
+                bufferedWriter.newLine();
+                bufferedWriter.write(a.toCharArray());
+            }
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+            result.clear();
+
 
         }
+        bufferedWriter.close();
     }
 
-    private static void deserializeTree(String treeString) {
+    private static void deserializeTree(String treeString, BufferedWriter bufferedWriter, ArrayList<String> result) {
         char[] array = treeString.toCharArray();
         Node tree = new Node("root");
         Node node = tree;
@@ -45,28 +57,45 @@ public class Deserialization {
 
             }
         }
-        ArrayList<String> result = new ArrayList<>();
-        answer(result, tree, 0, 0);
-        System.out.println(result.size());
-        result.forEach(System.out::println);
+
+        answer(result, tree);
 
 
     }
 
-    private static void answer(ArrayList<String> result, Node tree, int length, long prefix) {
+    private static void answer(ArrayList<String> result, Node tree) {
+        LinkedList<Node> nodes = new LinkedList<>();
+        LinkedList<Long> prefixes = new LinkedList<>();
+        LinkedList<Long> lengths = new LinkedList<>();
+        Node node;
+        long pref;
+        long l;
+        nodes.push(tree);
+        prefixes.push(0L);
+        lengths.push(0L);
+        while (!nodes.isEmpty()) {
+            node = nodes.poll();
+            pref = prefixes.poll();
+            l = lengths.poll();
+            if (node.left == null) {
+                String bitString = BigInteger.valueOf(pref).toString(2);
 
-        if (tree.left == null) {
-            String bitString = BigInteger.valueOf(prefix).toString(2);
-
-            if (bitString.length() < length) {
-                result.add(String.format("%0" + (length - bitString.length()) + "d%s", 0, bitString));
-                return;
+                if (bitString.length() < l) {
+                    result.add(String.format("%0" + (l - bitString.length()) + "d%s", 0, bitString));
+                    continue;
+                }
+                result.add(bitString);
+                continue;
             }
-            result.add(bitString);
-            return;
+
+            nodes.push(node.right);
+            prefixes.push((pref << 1) + 1);
+            lengths.push(l + 1);
+            nodes.push(node.left);
+            prefixes.push(pref << 1);
+            lengths.push(l + 1);
+
         }
-        answer(result, tree.left, length + 1, prefix << 1);
-        answer(result, tree.right, length + 1, (prefix << 1) + 1);
     }
 
     private static class Node {
