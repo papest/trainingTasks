@@ -15,7 +15,7 @@ public class Deserialization {
         for (int i = 0; i < n; i++) {
             treeString = bufferedReader.readLine();
             deserializeTree(treeString, result);
-            bufferedWriter.write('0' + result.size());
+            bufferedWriter.write(String.valueOf(result.size()));
 
             for (Result a : result) {
                 bufferedWriter.newLine();
