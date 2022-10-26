@@ -39,6 +39,15 @@ public class S {
     }
 
     private static String checkValidIpV6(char[] ipString) {
+        int count = 0;
+        for (char ch : ipString) {
+            if (ch == ':') {
+                count++;
+            }
+        }
+        if (count != 7) {
+            return ERROR;
+        }
         String[] array = new String(ipString).split(":");
         if (array.length != 8) {
             return ERROR;
@@ -68,7 +77,17 @@ public class S {
     }
 
     private static String checkValidIpV4(char[] ipString) {
+        int count = 0;
+        for (char ch : ipString) {
+            if (ch == '.') {
+                count++;
+            }
+        }
+        if (count != 3) {
+            return ERROR;
+        }
         String[] array = new String(ipString).split("\\.");
+
         if (array.length != 4) {
             return ERROR;
         }

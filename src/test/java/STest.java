@@ -46,7 +46,7 @@ public class STest {
                 {"2001:8:853:0:0:82:0_0:733\n", "Error\n"},
                 {"2001:8:853:0:0:82:-1:733\n", "Error\n"},
                 {"256.0.0.0" , "Error\n"},
-                {"2001:0db8:85a3:00:0:8a2e:0370:733\n", "IPv6\n"},
+                {"2001:0db8:85a3:0000:0:8a2e:0370:733\n", "IPv6\n"},
                 {"2001:0db8:85a3:00:0:8a2e0:0370:733\n", "Error\n"},
                 {"01:0db8:85a3:0:030:8a2e:0370:7334\n","IPv6\n"},
                 {"FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF\n", "IPv6\n"},
@@ -55,7 +55,9 @@ public class STest {
                 {"255.0", "Error\n"},
                 {"5.8.09.0\n", "Error\n"},
                 {"5.8..0\n", "Error\n"},
-                {"127.0.0.1\n", "Error\n"},
+                {"255.255.7.255\n", "IPv4\n"},
+                {"255.255.7.255.\n", "Error\n"},
+                {"FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:::\n", "Error\n"}
 
 
         };
