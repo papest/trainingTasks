@@ -20,7 +20,7 @@ public class S {
         int size = ipString.length;
         int i = 0;
 
-        if (size < 8) {
+        if (size < 7) {
             return ERROR;
         }
 
@@ -59,9 +59,7 @@ public class S {
                     return false;
                 }
                 if (b.length() > 1) {
-                    if (b.charAt(0) == '-') {
-                        return false;
-                    }
+                    return b.charAt(0) != '-';
 
                 }
 
@@ -94,9 +92,7 @@ public class S {
         try {
             if (Arrays.stream(array).filter(b -> {
                 if (b.length() > 1) {
-                    if (b.charAt(0) == '0' || b.charAt(0) == '-') {
-                        return false;
-                    }
+                    return b.charAt(0) != '0' && b.charAt(0) != '-';
 
                 }
                 return true;
