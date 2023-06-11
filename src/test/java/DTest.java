@@ -3,7 +3,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 
-
 import org.testng.Assert;
 import org.testng.ITestResult;
 
@@ -44,16 +43,19 @@ public class DTest {
                         "10 8 5\n" +
                         "10 5 4\n", "4\n"},
                 {"2 2\n" +
+                        "1 2\n" +
+                        "4 3\n", "4\n"},
+                {"2 2\n" +
                         "1 1\n" +
                         "1 1\n", "1\n"},
                 {"2 2\n" +
                         "10 9\n" +
                         "9 11\n", "2\n"},
                 {"4 5\n" +
-                "1 2 3 4 5\n" +
-                "10 9 8 7 6\n" +
-                "11 12 13 14 15\n" +
-                "20 19 18 17 16\n", "20\n"},
+                        "1 2 3 4 5\n" +
+                        "10 9 8 7 6\n" +
+                        "11 12 13 14 15\n" +
+                        "20 19 18 17 16\n", "20\n"},
                 {"3 4\n" +
                         "1 2 3 4\n" +
                         "10 11 12 5\n" +
