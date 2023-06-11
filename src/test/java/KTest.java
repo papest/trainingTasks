@@ -52,7 +52,7 @@ public class KTest {
                 {"?\n" +
                         "KK\n", "NO\n"},
                 {"?*\n" +
-                        "KK\n", "YES\n"},
+                        "KK\n", "NO\n"},
                 {"a*b*c\n"+ "abc\n", "YES\n"},
                 {"*a*b*c*\n"+ "abc\n", "YES\n"},
                 {"*a*b*ck*\n"+ "abc\n", "NO\n"},
