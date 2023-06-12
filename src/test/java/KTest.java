@@ -65,7 +65,7 @@ public class KTest {
                 {"*abcdef\n" +"abcdef\n", "YES\n"},
                 {"ab?\n" + "ab\n", "NO\n"},
                 {"a??k\n" + "abk\n", "NO\n"},
-                {"?***?*?\n" + "abkc\n", "YES\n"},
+                {"?****?*?\n" + "abkcc\n", "YES\n"},
                 {"ab*???\n" + "abdd\n", "NO\n"},
                 {"ab*????\n" + "abdd\n", "NO\n"},
                 {"ab*??\n" + "abdd\n", "YES\n"},
@@ -101,7 +101,6 @@ public class KTest {
         System.setIn(input);
         K.main(new String[]{});
         Assert.assertEquals(output.toString(), out);
-
     }
 
 }
