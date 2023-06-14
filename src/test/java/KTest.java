@@ -68,8 +68,12 @@ public class KTest {
                 {"?****?*?\n" + "abkcc\n", "YES\n"},
                 {"ab*???\n" + "abdd\n", "NO\n"},
                 {"ab*????\n" + "abdd\n", "NO\n"},
+                {"?b*?d*\n" + "abdd\n", "YES\n"},
                 {"ab*??\n" + "abdd\n", "YES\n"},
                 {"*abc**ab***hk\n" +"abkabchakbjabjhk\n", "YES\n"},
+                {"*abc**abc***hk\n" +"abkabchakbjabcjhk\n", "YES\n"},
+                {"*ab**abc***hk\n" +"abkabchakbjabcjhkhk\n", "YES\n"},
+                {"*ab?**ab?c***hk\n" +"abkabchakbjabjcjhkhk\n", "YES\n"},
                 {"algorithms*k\n" +
                         "algorithms\n", "NO\n"},
                 {"**algorithms\n" +
@@ -79,11 +83,11 @@ public class KTest {
 //        final int x = 2000;
 //        char[] arrayTemplate = new char[x];
 //        for (int i = 0; i < x; i++) {
-//            arrayTemplate[i] = '*';
+//            arrayTemplate[i] = i % 2 == 0 ? '?': '*';
 //        }
 //        char[] arrayString = new char[x];
 //        for (int i = 0; i < x; i++) {
-//            arrayString[i] = (char)('a' + i%20);
+//            arrayString[i] = (char)(i % 2 == 0 ? 'a' :'a' + i%20);
 //        }
 //        data = new Object[][] {
 //                {

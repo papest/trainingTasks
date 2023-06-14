@@ -1,50 +1,53 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class K {
     //Разрыв шаблона
 
     private static boolean stringMatchesTemplate(String stringToCheck, String template) {
+        if (!stringToCheck.matches("[a-z]+")) return false;
+        int minLenght = template.replaceAll("\\*", "").length();
+        if (minLenght > stringToCheck.length()) return false;
+        String regex1 = template.replaceAll("\\*\\*", "*");
 
-        StringBuilder builderToCheck = new StringBuilder(stringToCheck);
-        List<String> listRegex = Arrays.stream(template.split("\\*")).collect(Collectors.toList());
-        if (template.endsWith("*")) listRegex.add("");
+        StringBuilder checking = new StringBuilder(stringToCheck);
+        boolean notFixedStart = false;
+        StringBuilder lastChars = new StringBuilder();
 
-        int index = 0;
-        boolean first = true;
-        boolean flag = false;
-        for (String regex1 : listRegex) {
-            if (regex1.isEmpty()) {
-                flag = true;
-                continue;
-            }
-            index = check(builderToCheck, regex1, index);
+        for (char ch : regex1.toCharArray()) {
+            switch (ch) {
+                case '?' -> {
+                    if (minLenght < 1) return false;
+                    checking.deleteCharAt(0);
+                    minLenght--;
+                }
+                case '*' -> {
+                    notFixedStart = true;
+                    lastChars = new StringBuilder();
+                }
+                default -> {
+                    if (minLenght < 1) return false;
+                    int index = checking.indexOf(String.valueOf(ch));
+                    if (index == -1) return false;
+                    if (index != 0 && !notFixedStart) return false;
+                    lastChars.append(ch);
+                    if (index != 0) {
+                        index = checking.indexOf(lastChars.toString());
+                        if (index == -1) return false;
+                        index = index + lastChars.length() - 1;
+                    }
 
-            if (index == -1) return false;
-            if (index != 0 && first && !flag) return false;
-            builderToCheck.delete(0, index + regex1.length());
-            index = 0;
-            if (flag && first) {
-                flag = false;
-                first = false;
+                    checking.delete(0, index + 1);
+                    minLenght--;
+                    if (checking.indexOf(String.valueOf(ch)) == -1) {
+                        notFixedStart = false;
+                    }
+
+                }
             }
         }
-        return builderToCheck.isEmpty() || flag || check(builderToCheck, listRegex.get(listRegex.size() - 1), index) != -1;
-    }
-
-    private static int check(StringBuilder builderToCheck, String regex1, int index) {
-        if (!regex1.contains("?")) return builderToCheck.indexOf(regex1, index);
-        Pattern p = Pattern.compile(regex1.replaceAll("\\?", "[a-z]"));
-        Matcher m = p.matcher(builderToCheck.toString());
-        if (m.find()) {
-            return m.start();
-        } else return -1;
+        return checking.length() == 0 || notFixedStart;
     }
 
     public static void main(String[] args) throws IOException {
