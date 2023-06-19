@@ -74,6 +74,11 @@ public class KTest {
                 {"*abc**abc***hk\n" +"abkabchakbjabcjhk\n", "YES\n"},
                 {"*ab**abc***hk\n" +"abkabchakbjabcjhkhk\n", "YES\n"},
                 {"*ab?**ab?c***hk\n" +"abkabchakbjabjcjhkhk\n", "YES\n"},
+                {"*ab?**ab?c***hk\n" +"abkabchakbjabjcjhkhkk\n", "NO\n"},
+                {"*ab?**ab?c***hk\n" +"abkabchakbjabjjhkhk\n", "NO\n"},
+                {"*ab?**?b?c***hk\n" +"abkabchakbjabjjhkhk\n", "NO\n"},
+                {"*a?b?*****hk\n" +"abkabchakbjabjjhkhk\n", "YES\n"},
+                {"abkabchakbjab*?jhkhk\n" +"abkabchakbjabjjhkhk\n", "YES\n"},
                 {"algorithms*k\n" +
                         "algorithms\n", "NO\n"},
                 {"**algorithms\n" +
