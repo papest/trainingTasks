@@ -10,7 +10,7 @@ public class K {
         if (!stringToCheck.matches("[a-z]+")) return false;
         int minLenght = template.replaceAll("\\*", "").length();
         if (minLenght > stringToCheck.length()) return false;
-        String regex1 = template.replaceAll("\\*\\*", "*");
+        String regex1 = template.replaceAll("\\*+", "*");
 
         StringBuilder checking = new StringBuilder(stringToCheck);
         boolean notFixedStart = false;
@@ -19,9 +19,7 @@ public class K {
         for (char ch : regex1.toCharArray()) {
             switch (ch) {
                 case '?' -> {
-                    if (minLenght < 1) return false;
                     checking.deleteCharAt(0);
-                    minLenght--;
                     if (!lastChars.isEmpty()) lastChars.append(ch);
                 }
                 case '*' -> {
@@ -29,25 +27,29 @@ public class K {
                     lastChars = new StringBuilder();
                 }
                 default -> {
-                    if (minLenght < 1) return false;
                     int index = checking.indexOf(String.valueOf(ch));
                     if (index == -1) return false;
                     if (index != 0 && !notFixedStart) return false;
                     lastChars.append(ch);
                     if (index != 0) {
-                        index = indexOfLastChars(lastChars.toString(), checking); //checking.indexOf(lastChars.toString());
+                        index = indexOfLastChars(lastChars.toString(), checking);
                         if (index == -1) return false;
                         index = index + lastChars.length() - 1;
                     }
 
                     checking.delete(0, index + 1);
-                    minLenght--;
-                    if (checking.indexOf(lastChars.toString()) == -1) { //String.valueOf(ch)
+                    if (indexOfLastChars(lastChars.toString(), checking) == -1) {
                         notFixedStart = false;
                     }
 
                 }
             }
+        }
+        if (lastChars.length() > 0 && notFixedStart && checking.length() >= lastChars.length()) {
+            if (checking.length() > lastChars.length()) {
+                checking.delete(0, checking.length() - lastChars.length());
+            }
+            return lastChars.toString().equals(checking.toString());
         }
         return checking.length() == 0 || notFixedStart;
     }
@@ -57,7 +59,6 @@ public class K {
         int lenght = checking.length();
         if (lastChars.length() > lenght) return -1;
         ArrayList<StringBuilder> array = new ArrayList<>();
-        //int[] offsetArray;
         int size = lastChars.length();
         char curr;
         for (int i = 0; i < size; i++) {
@@ -82,11 +83,6 @@ public class K {
         }
 
         size = array.size();
-//        offsetArray = new int[size];
-//        offsetArray[0] = 0;
-//        for (int i = 1; i < size; i++) {
-//            offsetArray[i] = offsetArray[i - 1] + array.get(i - 1).length();
-//        }
         int index = -1;
         int index1 = 0;
         int next = 0;

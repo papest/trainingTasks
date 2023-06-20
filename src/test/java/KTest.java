@@ -74,6 +74,7 @@ public class KTest {
                 {"*abc**abc***hk\n" +"abkabchakbjabcjhk\n", "YES\n"},
                 {"*ab**abc***hk\n" +"abkabchakbjabcjhkhk\n", "YES\n"},
                 {"*ab?**ab?c***hk\n" +"abkabchakbjabjcjhkhk\n", "YES\n"},
+                {"*ab?**ab?c***hk***\n" +"abkabchakbjabjcjhkhkk\n", "YES\n"},
                 {"*ab?**ab?c***hk\n" +"abkabchakbjabjcjhkhkk\n", "NO\n"},
                 {"*ab?**ab?c***hk\n" +"abkabchakbjabjjhkhk\n", "NO\n"},
                 {"*ab?**?b?c***hk\n" +"abkabchakbjabjjhkhk\n", "NO\n"},
@@ -82,7 +83,12 @@ public class KTest {
                 {"algorithms*k\n" +
                         "algorithms\n", "NO\n"},
                 {"**algorithms\n" +
-                        "algorithms\n", "YES\n"}
+                        "algorithms\n", "YES\n"},
+                {"a?k?b?h?k?j?b?h?\n" +"abkabchakbjabjhk\n", "YES\n"},
+                {"a?k?b?h?k?j?b?h?k\n" +"abkabchakbjabjhkk\n", "YES\n"},
+                {"a?k?b?h?k?j?b?h?k*\n" +"abkabchakbjabjhkk\n", "YES\n"},
+                {"????b??*?k??*?b????*\n" +"abkabchakbjabjhkk\n", "YES\n"},
+                {"a???b????????\n" +"abkabkkkkkkkh\n", "YES\n"},
 
         };
 //        final int x = 2000;
